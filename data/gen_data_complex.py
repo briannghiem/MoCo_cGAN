@@ -153,7 +153,7 @@ for i in range(len(m_files)):
     Rs = 1
     TR_shot = int(xp.round(PE1 / (Rs*n_states_init)))
     order = 'interleaved'
-    U_array = xp.transpose(make_samp(m_U, Rs, TR_shot, order), axes = (0,2,1,3)) #PE1 along AP
+    U_array = xp.transpose(msi.make_samp(m_U, Rs, TR_shot, order), axes = (0,2,1,3)) #PE1 along AP
     del m_U
     U = eop._U_Array2List(U_array, m_GT.shape)
     #
@@ -183,10 +183,12 @@ for i in range(len(m_files)):
             s_path_temp = os.path.join(spath, motion_lv)
             plib.Path(s_path_temp).mkdir(parents=True, exist_ok=True)
             xp.save(s_path_temp + r'/train_dat{}.npy'.format((i+1)+(k*67)), output)
+        #
+    #
     t4 = time()
     print("Time elapsed for Subject {}: {} sec".format(str(i+1), str(t4 - t3)))
     #
-#
+    #
 
 print("Finished simulating training data")
 t2 = time()
