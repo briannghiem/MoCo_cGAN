@@ -4,16 +4,16 @@ import os
 from keras.models import Input, Model
 from keras.layers import Activation, Input, Dropout, merge, Concatenate, MaxPooling3D
 from keras.layers.convolutional import  Conv3D, UpSampling2D, UpSampling3D, Conv3DTranspose
-from keras.layers.normalization import BatchNormalization
+from tensorflow.keras.layers import BatchNormalization
 from keras.layers.advanced_activations import LeakyReLU
 from keras import regularizers
 from keras.models import load_model
-from keras.optimizers import Adam
+from tensorflow.keras.optimizers import Adam
 from utils.data_generator import  data_generator
 from networks.discriminator import GanDiscriminator
 from networks.CGAN import DCGAN
 from utils import logger
-from keras.utils.training_utils import multi_gpu_model
+from tensorflow.python.keras.utils.multi_gpu_utils import multi_gpu_model
 import time
 from keras.utils import generic_utils as keras_generic_utils
 import scipy
