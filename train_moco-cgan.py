@@ -11,7 +11,7 @@ from keras.models import load_model
 from tensorflow.keras.optimizers import Adam
 from utils.data_generator import  data_generator
 from networks.discriminator import GanDiscriminator
-from networks.CGAN import DCGAN
+from networks.CGAN import CGAN
 from utils import logger
 from tensorflow.python.keras.utils.multi_gpu_utils import multi_gpu_model
 import time
