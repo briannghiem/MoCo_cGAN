@@ -1,6 +1,6 @@
 from keras.layers import Flatten, Dense, Input, Reshape, merge, Concatenate
 from keras.layers.convolutional import Conv3D
-from keras.layers.normalization import BatchNormalization
+from tensorflow.keras.layers import BatchNormalization
 from keras.layers.advanced_activations import LeakyReLU
 from keras.models import Model
 import keras.backend as K
