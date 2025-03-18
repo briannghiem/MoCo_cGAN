@@ -100,15 +100,16 @@ severe_specs3 = {'Tx':[1.6,0.6],'Ty':[3.6,1.0],'Tz':[3.6,1.0],\
 motion_specs = {'mild':moderate_specs,'moderate':severe_specs1,\
                 'large':severe_specs2,'extreme':severe_specs3}
 
-motion_lv_list = ['moderate', 'large']
+motion_lv_list = ['mild', 'moderate']
 
 #-------------------------------------------------------------------------------
 #-------------------------Image Acquisition Simulation--------------------------
 #-------------------------------------------------------------------------------
 #Load data
 dpath = r'/home/nghiemb/Data/CC'
-cnn_path = r'/home/nghiemb/PyMoCo/cnn/3DUNet_SAP'
-spath = cnn_path + r'/weights/PE1_AP/Complex/{}/train_n240_sequential'.format('combo')
+# cnn_path = r'/home/nghiemb/PyMoCo/cnn/3DUNet_SAP'
+# spath = cnn_path + r'/weights/PE1_AP/Complex/{}/train_n240_sequential'.format('combo')
+spath = r'/home/nghiemb/RMC_repos/MoCo_cGAN/data/training_dataset'
 m_files = sorted(os.listdir(os.path.join(dpath,'m_complex'))) #alphanumeric order
 C_files = sorted(os.listdir(os.path.join(dpath, 'sens')))
 
