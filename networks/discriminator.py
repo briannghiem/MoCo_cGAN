@@ -2,8 +2,7 @@ from keras.layers import Flatten, Dense, Input, Reshape, merge, Concatenate
 from keras.layers.convolutional import Conv3D
 from tensorflow.keras.layers import BatchNormalization
 from keras.layers.advanced_activations import LeakyReLU
-# from keras.models import Model
-from tensorflow.python.keras.models import Model
+from keras.models import Model
 import keras.backend as K
 import numpy as np
 #from keras.utils import plot_model
@@ -48,7 +47,7 @@ def generate_gan_loss(last_disc_conv_layer,  input_layer):
 
     
 
-    discriminator = Model(input=last_disc_conv_layer, output=[x], name='discriminator_nn')
+    discriminator = Model(inputs=last_disc_conv_layer, outputs=[x], name='discriminator_nn')
     return discriminator
 
 
