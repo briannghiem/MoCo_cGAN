@@ -51,7 +51,7 @@ def level_block(m, dim, depth, inc, acti, do, bn, mp, up, res):
     else:
             m = conv_block(m, dim, acti, bn, res, do=0.5)
     return m
-        
+
 def UNet(img_shape, out_ch=1, start_ch=4, depth=2, inc_rate=2., activation='relu', dropout=0.5, batchnorm=False, maxpool=True, upconv=False, residual=False):
     i = Input(shape=img_shape)
     o = level_block(i, start_ch, depth, inc_rate, activation, dropout, batchnorm, maxpool, upconv, residual)
@@ -59,14 +59,21 @@ def UNet(img_shape, out_ch=1, start_ch=4, depth=2, inc_rate=2., activation='relu
     return Model(inputs=i, outputs=o)
 
 #load and prep data
+mpath = r'/home/nghiemb/RMC_repos/MoCo_cGAN'
+dpath = mpath + r'/data/training_dataset/slices'
+spath = mpath + r'/networks'
+
 images=np.load('/home/user/moco_dataset/targets.npy')
 trainy=np.abs(np.expand_dims(images,4)) #add a channel dimension 
 
 images_motion=np.load('/home/user/moco_dataset/inputs.npy')
 trainx=np.abs(np.expand_dims(images_motion,4))
 
+im_width =224 #AP
+im_height=192 #LR
+im_slices=8 #SI; cropping upper and lower 1/4 of FOV along SI
 
-img_shape= [192,160,8,1] #(xdim,ydim,slices,channels)
+img_shape= [im_width,im_height,im_slices,1] #(xdim,ydim,slices,channels)
 
 #data augmentation options
 fliplr=False
@@ -80,34 +87,38 @@ valy=trainy[0:280,:,:,:,:]
 trainx=trainx[280:size,:,:,:,:]
 trainy=trainy[280:size,:,:,:,:]
 
+# # --------------------------------------------
+# # DATA AUGMENTATION
 
-if fliplr:
-    trainx=np.concatenate([trainx, np.flip(trainx,3)], axis=0)
-    trainy=np.concatenate([trainy, np.flip(trainy,3)], axis=0)
-    im_count=np.shape(trainx)[0]
-    
-#random shuffle of training examples
-arr=np.arange(np.shape(trainx)[0])
-np.random.shuffle(arr)
-trainx=trainx[arr,...]
-trainy=trainy[arr,...]
+# if fliplr:
+#     trainx=np.concatenate([trainx, np.flip(trainx,3)], axis=0)
+#     trainy=np.concatenate([trainy, np.flip(trainy,3)], axis=0)
+#     im_count=np.shape(trainx)[0]
 
-print('start augmentation rotations')
-if rotate:
-    im_count=np.shape(trainx)[0]
-    tempx=np.zeros(np.shape(trainx))
-    tempy=np.zeros(np.shape(trainy))
-    for i in range(im_count):
-        [tempx[i,:,:,:,:], tempy[i,:,:,:,:]]=random_rotation(trainx[i,:,:,:,:],trainy[i,:,:,:,:])
-    trainx=np.concatenate([trainx,tempx])
-    trainy=np.concatenate([trainy,tempy])
+# #random shuffle of training examples
+# arr=np.arange(np.shape(trainx)[0])
+# np.random.shuffle(arr)
+# trainx=trainx[arr,...]
+# trainy=trainy[arr,...]
 
-print('done data augmentation')
-# width, height of images to work with.
-im_width =192
-im_height=160
-im_slices=8
+# print('start augmentation rotations')
+# if rotate:
+#     im_count=np.shape(trainx)[0]
+#     tempx=np.zeros(np.shape(trainx))
+#     tempy=np.zeros(np.shape(trainy))
+#     for i in range(im_count):
+#         [tempx[i,:,:,:,:], tempy[i,:,:,:,:]]=random_rotation(trainx[i,:,:,:,:],trainy[i,:,:,:,:])
+#     trainx=np.concatenate([trainx,tempx])
+#     trainy=np.concatenate([trainy,tempy])
 
+# print('done data augmentation')
+# # width, height of images to work with.
+
+
+# ----------------------
+# GENERATOR
+# Our generator is a 3D  U-NET with skip connections
+# ----------------------
 # input/oputputt channels in image
 input_channels = 1
 output_channels = 1
@@ -116,10 +127,6 @@ output_channels = 1
 input_img_dim =(im_width, im_height, im_slices, input_channels)
 output_img_dim = ( im_width,im_height,im_slices,  output_channels)
 
-# ----------------------
-# GENERATOR
-# Our generator is a 3D  U-NET with skip connections
-# ----------------------
 
 generator_nn =UNet(img_shape, out_ch=1, start_ch=64, depth=3, inc_rate=2., activation='relu', dropout=0.5, batchnorm=True, maxpool=True, upconv=True, residual=True)
 
